@@ -9,7 +9,7 @@
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Tabel Pengaduan</title>
+  <title>@yield('title')</title>
 
   <!-- Custom fonts for this template -->
   <link href="{{asset('public/template/admin/vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
@@ -44,7 +44,7 @@
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item">
-        <a class="nav-link" href="{{route('dashboard.admin')}}">
+        <a class="nav-link" href="{{route('dashboard.' . auth()->user()->role)}}">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>
       </li>
@@ -57,15 +57,14 @@
         Manajemen Pengaduan
       </div>
 
-      @if (auth()->user()->role == 'admin')
       <!-- Nav Item - Pages Collapse Menu -->
-      <li class="nav-item">
+      <li class="nav-item active">
         <a class="nav-link collapsed" href="{{route('petugas.index')}}">
           <i class="fas fa-fw fa-user"></i>
           <span>Data Petugas</span>
         </a>
       </li>
-
+      
       <!-- Nav Item - Pages Collapse Menu -->
       <li class="nav-item">
         <a class="nav-link collapsed" href="{{route('masyarakat.index')}}">
@@ -73,7 +72,6 @@
           <span>Data Masyarakat</span>
         </a>
       </li>
-      @endif
 
       <!-- Nav Item - Pages Collapse Menu -->
       <li class="nav-item">
@@ -84,7 +82,7 @@
       </li>
 
       <!-- Nav Item - Tables -->
-      <li class="nav-item active">
+      <li class="nav-item">
         <a class="nav-link" href="{{route('pengaduan.tanggapi')}}">
           <i class="fas fa-fw fa-table"></i>
           <span>Tanggapi Pengaduan</span></a>
@@ -130,7 +128,6 @@
           </form>
 
         <!-- Topbar Navbar -->
-  <!-- Topbar Navbar -->
 <script type="text/javascript">
   function dark(){
     document.getElementById('accordionSidebar').style.background = '#000020';
@@ -218,63 +215,13 @@
         </nav>
         <!-- End of Topbar -->
 
-        <!-- Begin Page Content -->
-        <div class="container-fluid">
-
-          <!-- DataTales Example -->
-          <div class="card shadow mb-4 animated--grow-in">
-            <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary"> DATA PENGADUAN MASYARAKAT</h6>
-            </div>
-            <div class="card-body">
-              <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                  <thead>
-                    <tr>
-                      <th>No</th>
-                      <th>Tanggal</th>
-                      <th>Nama</th>
-                      <th>Isi Laporan</th>
-                      {{-- <th>Foto</th> --}}
-                      {{-- <th>Tanggapan</th> --}}
-                      <th>Aksi</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    @php $no = 1; @endphp
-                    @foreach ($data as $item)
-                      <tr>
-                        <td>{{$no++}}</td>
-                        <td>{{$item->tanggal}}</td>
-                        <td>{{ucwords($item->masyarakat->nama)}}</td>
-                        <td>{{$item->teks_pengaduan}}</td>
-                        {{-- <td class="text-center"><a href="{{url('public/images/pengaduan/' . $item->foto)}}" target="_blank"><img src="{{asset('public/images/pengaduan/' . $item->foto)}}" style="width: 100px;height: auto;"></a></td> --}}
-                        {{-- @if ($item->tanggapan == null)
-                          <td>Belum ditanggapi</td>
-                        @else
-                          <td>{{$item->tanggapan->teks_respon}}</td>
-                        @endif --}}
-                        <td>{{-- <a href="{{route('detail.tanggapan', $item->id)}}" class="btn btn-primary btn-sm"><i class="fas fa-fw fa-eye"></i> Detail</a> --}}
-                        <a href="{{route('beri.tanggapan', $item->id)}}" class="btn btn-success btn-sm"><i class="fas fa-fw fa-pen"></i> Tanggapi</a></td>
-                      </tr>
-                    @endforeach
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-        </div>
-        <!-- /.container-fluid -->
-
-      </div>
-      <!-- End of Main Content -->
+        @yield('content')
 
       <!-- Footer -->
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>Copyright &copy; Your Website 2019</span>
+            <span>Copyright &copy; Your Website 2020</span>
           </div>
         </div>
       </footer>
@@ -302,7 +249,7 @@
           </button>
         </div>
         <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-        <div class="modal-footer">
+        <div class="modal-footer">  
           <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
           <a class="btn btn-primary" href="{{route('logout')}}">Logout</a>
         </div>
@@ -311,21 +258,26 @@
   </div>
 
   <!-- Bootstrap core JavaScript-->
-  <script src="{{asset('public/template/admin/vendor/jquery/jquery.min.js')}}"></script>
-  <script src="{{asset('public/template/admin/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+  <script src="{{asset('/public/template/admin/vendor/jquery/jquery.min.js')}}"></script>
+  <script src="{{asset('/public/template/admin/vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 
   <!-- Core plugin JavaScript-->
-  <script src="{{asset('public/template/admin/vendor/jquery-easing/jquery.easing.min.js')}}"></script>
+  <script src="{{asset('/public/template/admin/vendor/jquery-easing/jquery.easing.min.js')}}"></script>
 
   <!-- Custom scripts for all pages-->
-  <script src="{{asset('public/template/admin/js/sb-admin-2.min.js')}}"></script>
+  <script src="{{asset('/public/template/admin/js/sb-admin-2.min.js')}}"></script>
 
   <!-- Page level plugins -->
-  <script src="{{asset('public/template/admin/vendor/datatables/jquery.dataTables.min.js')}}"></script>
-  <script src="{{asset('public/template/admin/vendor/datatables/dataTables.bootstrap4.min.js')}}"></script>
+  <script src="{{asset('/public/template/admin/vendor/datatables/jquery.dataTables.min.js')}}"></script>
+  <script src="{{asset('/public/template/admin/vendor/datatables/dataTables.bootstrap4.min.js')}}"></script>
 
   <!-- Page level custom scripts -->
-  <script src="{{asset('public/template/admin/js/demo/datatables-demo.js')}}"></script>
+  <script src="{{asset('/public/template/admin/js/demo/datatables-demo.js')}}"></script>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $('#dataTablee').dataTable();
+    });
+  </script>
 
 </body>
 

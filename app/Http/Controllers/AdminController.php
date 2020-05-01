@@ -62,4 +62,44 @@ class AdminController extends Controller
 
         return redirect()->route('pengaduan.tanggapi')->with('success', 'Berhasil ditanggapi');
     }
+
+    public function hapusPengaduan($id)
+    {
+        Pengaduan::find($id)->delete();
+        return redirect()->back();
+    }
+
+    public function printLaporan()
+    {
+        $belum      = Pengaduan::where('status', 'terkirim')->get()->count();
+        $proses     = Pengaduan::where('status', 'proses')->get()->count();
+        $selesai    = Pengaduan::where('status', 'selesai')->get()->count();
+        $jumlah     = Pengaduan::all()->count();
+
+        $data = [
+            'belum'     => $belum,
+            'proses'    => $proses,
+            'selesai'   => $selesai,
+            'jumlah'    => $jumlah
+        ];
+
+        return view('print', compact('data'));
+    }
+
+    public function printLaporanPost(Request $request)
+    {
+        // dd($request->all());
+        $data = Pengaduan::whereBetween('tanggal', [$request->dari, $request->sampai])
+                                 ->where('status', $request->status)->get();
+
+        $status = ucwords($request->status);
+        $x   = explode('-', $request->dari);
+        $y   = explode('-', $request->sampai);
+        $dari = $x[2] . '-' . $x[1] . '-' . $x[0];
+        $sampai = $y[2] . '-' . $y[1] . '-' . $y[0];
+
+        $jumlah = $data->count();
+
+        return view('laporan.print', compact('data', 'jumlah', 'dari', 'sampai', 'status'));
+    }
 }

@@ -8,6 +8,12 @@ use App\Pengaduan;
 
 class MasyarakatController extends Controller
 {
+    public function index()
+    {
+        $data = Masyarakat::all();
+        return view('masyarakat.index', compact('data'));
+    }
+
     public function ajukanPengaduan()
     {
         $data = Masyarakat::where('user_id', auth()->user()->id)->first();
@@ -17,7 +23,7 @@ class MasyarakatController extends Controller
     public function riwayatPengaduan()
     {
         $user = Masyarakat::where('user_id', auth()->user()->id)->first();
-        $data = Pengaduan::orderBy('tanggal', 'DESC')->where('masyarakat_id', $user->id)->get();
+        $data = Pengaduan::where('masyarakat_id', $user->id)->latest()->get();
         return view('masyarakat.riwayat-pengaduan', compact('data'));
     }
 
@@ -29,9 +35,9 @@ class MasyarakatController extends Controller
 
     public function  postPengaduan(Request $request)
     {
-        // $this->validate($request, [
-        //     'file' => 'required|mimes:jpeg, jpg, png|max:2048'
-        // ]);
+        $this->validate($request, [
+            'file' => 'required|file|mimes:.jpeg,jpg,png|max:2048'
+        ]);
 
         $time = date('ymdhis');
         $id   = uniqid();
@@ -46,12 +52,19 @@ class MasyarakatController extends Controller
         Pengaduan::create([
             'tanggal' => $date,
             'masyarakat_id' => $masyarakat->id,
-            'teks_pengaduan' => $request->teks_masalah,
+            'teks_pengaduan' => htmlspecialchars($request->teks_masalah),
             'foto' => $fileName,
             'status' => 'terkirim',
             'user_id' => auth()->user()->id
         ]);
 
         return redirect()->route('dashboard.' . auth()->user()->role)->with('success', 'Sukses! Terima kasih telah melaporkan masalah Anda!');
+    }
+
+    public function hapus($id)
+    {
+        $masyarakat = Masyarakat::find($id)->delete();
+
+        return redirect()->route('masyarakat.index')->with('success', 'Data telah berhasi dihapus!');
     }
 }

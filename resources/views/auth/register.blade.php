@@ -43,9 +43,11 @@
                     @csrf
                     <div class="form-group">
                         <input required="required" minlength="0" maxlength="17" type="number" name="nik" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Masukan NIK..">
+                        <small class="text-danger">{{$errors->first('nik')}}</small>
                     </div>
                     <div class="form-group">
                         <input required="required" type="text" name="nama" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Masukan nama.. (sesuai KTP)">
+                        <small class="text-danger">{{$errors->first('nama')}}</small>
                     </div>
                     <div class="form-group">
                       <select name="jk" id="jk" class="form-control form-control-user" required>
@@ -56,11 +58,13 @@
                     </div>
                     <div class="form-group">
                       <input required="required" type="email" name="email" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Masukan email..">
+                      <small class="text-danger">{{$errors->first('email')}}</small>
                     </div>
                     <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <input required="required" type="password" name="password1" class="form-control form-control-user" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Ketik password..">
+                                <small class="text-danger">{{$errors->first('password1')}}</small>
                             </div>
                         </div>
                         <div class="col-md-6">

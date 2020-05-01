@@ -201,6 +201,15 @@
             </div>
           </div>
 
+          <div class="row">
+            <div class="col-md">
+              <div class="card">
+                <div class="card-body shadow">
+                  <marquee behavior=""><h3>Selamat datang <b class="text-primary">{{ucwords(auth()->user()->nama)}}</b>!</h3></marquee>
+                </div>
+              </div>
+            </div>
+          </div>
           <!-- Content Row -->
         </div>
         <!-- /.container-fluid -->

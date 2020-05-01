@@ -41,7 +41,7 @@
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item active">
-        <a class="nav-link" href="{{route('dashboard.' . auth()->user()->role)}}">
+        <a class="nav-link" href="{{route('dashboard.admin')}}">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>
       </li>
@@ -53,6 +53,24 @@
       <div class="sidebar-heading">
         Manajemen Pengaduan
       </div>
+
+      @if (auth()->user()->role == 'admin')
+      <!-- Nav Item - Pages Collapse Menu -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{route('petugas.index')}}">
+          <i class="fas fa-fw fa-user"></i>
+          <span>Data Petugas</span>
+        </a>
+      </li>
+
+      <!-- Nav Item - Pages Collapse Menu -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{route('petugas.index')}}">
+          <i class="fas fa-fw fa-user"></i>
+          <span>Data Masyarakat</span>
+        </a>
+      </li>
+      @endif
 
       <!-- Nav Item - Pages Collapse Menu -->
       <li class="nav-item">
@@ -179,7 +197,7 @@
           <div class="d-sm-flex align-items-center justify-content-between mb-4">
             <h1 class="h3 mb-0 text-grey-800">Dashboard {{ucwords(auth()->user()->role)}}</h1>
             @if (auth()->user()->role == 'admin')
-              <a href="print_report.php" target="_blank" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i class="fas fa-table fa-sm text-white-50"></i> Lihat Laporan</a>
+              <a href="{{route('print')}}" class="d-none d-sm-inline-block btn btn-sm btn-success shadow-sm"><i class="fas fa-table fa-sm text-white-50"></i> Lihat Laporan</a>
             @endif
           </div>
 
@@ -259,6 +277,16 @@
             </div>
           </div>
 
+          <div class="row">
+            <div class="col-md">
+              <div class="card">
+                <div class="card-body shadow">
+                  <marquee behavior=""><h3>Selamat datang <b class="text-primary">{{ucwords(auth()->user()->nama)}}</b>!</h3></marquee>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- Content Row -->
         </div>
         <!-- /.container-fluid -->
@@ -270,7 +298,7 @@
       <footer class="sticky-footer bg-white">
         <div class="container my-auto">
           <div class="copyright text-center my-auto">
-            <span>Copyright &copy; Client 2020</span>
+            <span>Copyright &copy; Your Website 2020</span>
           </div>
         </div>
       </footer>

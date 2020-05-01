@@ -159,7 +159,7 @@
                                     <div class="form-group">
                                         <label class="float-left"><b>TANGGAPAN PENGADUAN</b></label>
                                         <a class="float-right" href="{{url('public/images/pengaduan/' . $data->foto)}}" target="_blank">Lihat bukti disini..</a>
-                                        <textarea rows="5" class="form-control form-control-user" readonly="readonly">{{$data->tanggapan->teks_respon}}</textarea>
+                                        <textarea rows="5" class="form-control form-control-user" readonly="readonly">@if ($data->tanggapan == null)Belum ada tanggapan. @else {{$data->tanggapan->teks_respon}} @endif</textarea>
                                     </div>
                                   </div>
                               </div>

@@ -44,7 +44,7 @@
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item">
-        <a class="nav-link" href="{{route('dashboard.' . auth()->user()->role)}}">
+        <a class="nav-link" href="{{route('dashboard.admin')}}">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>
       </li>
@@ -56,6 +56,24 @@
       <div class="sidebar-heading">
         Manajemen Pengaduan
       </div>
+
+      @if (auth()->user()->role == 'admin')
+      <!-- Nav Item - Pages Collapse Menu -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{route('petugas.index')}}">
+          <i class="fas fa-fw fa-user"></i>
+          <span>Data Petugas</span>
+        </a>
+      </li>
+
+      <!-- Nav Item - Pages Collapse Menu -->
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="{{route('masyarakat.index')}}">
+          <i class="fas fa-fw fa-user"></i>
+          <span>Data Masyarakat</span>
+        </a>
+      </li>
+      @endif
 
       <!-- Nav Item - Pages Collapse Menu -->
       <li class="nav-item active">
@@ -207,15 +225,15 @@
           <!-- DataTales Example -->
           <div class="card shadow mb-4 animated--grow-in">
             <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">Tabel Pengaduan Diproses</h6>
+              <h6 class="m-0 font-weight-bold text-primary">DATA PENGADUAN DIPROSES</h6>
             </div>
             <div class="card-body">
 
-                    <div class="form-group">
-                      <div class="small">
-                        <center><b align="center" class="text-success">1 Pengaduan telah Selesai !</b></center>
-                      </div>
-                    </div>
+              {{-- <div class="form-group">
+                <div class="small">
+                  <center><b align="center" class="text-success">1 Pengaduan telah Selesai !</b></center>
+                </div>
+              </div> --}}
 
               <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
@@ -224,7 +242,7 @@
                       <th>No</th>
                       <th>Tanggal</th>
                       <th>Nama</th>
-                      <th>Isi</th>
+                      <th>Isi Pengaduan</th>
                       <th>Status</th>
                       <th>Aksi</th>
                     </tr>
@@ -261,15 +279,15 @@
           <!-- DataTales Example -->
           <div class="card shadow mb-4 animated--grow-in">
             <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-success">Tabel Pengaduan Telah Selesai</h6>
+              <h6 class="m-0 font-weight-bold text-success">DATA PENGADUAN SELESAI</h6>
             </div>
             <div class="card-body">
 
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                       <div class="small">
                         <center><b align="center" class="text-warning">1 Pengaduan berhasil dihapus !</b></center>
                       </div>
-                    </div>
+                    </div> --}}
 
               <div class="table-responsive">
                 <table class="table table-bordered" id="dataTablee" width="100%" cellspacing="0">
@@ -278,7 +296,7 @@
                       <th>No</th>
                       <th>Tanggal</th>
                       <th>Nama</th>
-                      <th>Isi</th>
+                      <th>Isi Pengaduan</th>
                       <th>Status</th>
                       <th>Aksi</th>
                     </tr>
@@ -292,7 +310,10 @@
                         <td>{{ucwords($item1->masyarakat->nama)}}</td>
                         <td>{{$item1->teks_pengaduan}}</td>
                         <td><p class="text-success"><b>SELESAI</b></p></td>
-                        <td><a onclick="return confirm('Yakin ingin menghapus data pengaduan ini?');" href="" class="btn btn-danger btn-sm"><span class="fas fa-fw fa-trash"></span></a></td>
+                        <td>
+                          <a href="{{route('detail.pengaduan', $item1->id)}}" class="btn btn-primary btn-sm"><i class="fas fa-fw fa-eye"></i> Detail</a>
+                          <a onclick="return confirm('Yakin ingin menghapus data pengaduan ini?');" href="{{route('pengaduan.hapus', $item1->id)}}" class="btn btn-danger btn-sm"><span class="fas fa-fw fa-trash"></span> Hapus</a>
+                        </td>
                       </tr>
                     @endforeach
                   </tbody>

@@ -36,7 +36,7 @@ class AuthController extends Controller
             if (auth()->user()->role == 'admin') {
                 return redirect()->route('dashboard.admin')->with('success', 'Selamat datang!');
             }elseif (auth()->user()->role == 'petugas') {
-                return redirect()->route('dashboard.petugas')->with('success', 'Selamat datang!');
+                return redirect()->route('dashboard.admin')->with('success', 'Selamat datang!');
             }elseif (auth()->user()->role == 'masyarakat') {
                 return redirect()->route('dashboard.masyarakat')->with('success', 'Selamat datang!');
             }else{
@@ -50,8 +50,11 @@ class AuthController extends Controller
     public function postreg(Request $request)
     {
         $this->validate($request, [
-            'nama'  => 'required',
-            'email' => 'required'
+            'nama'      => 'required',
+            'email'     => 'required|email',
+            'password1' => 'alpha_num|min:6',
+            'no_telp'   => 'numeric|max:15',
+            'nik'       => 'numeric|digits:16'
         ]);
 
         $user = User::create([
