@@ -22,10 +22,12 @@ class PetugasController extends Controller
     public function addPetugas(Request $request)
     {
         $this->validate($request, [
-            // 'nama'      => 'alpha_space',
-            'email'     => 'email',
-            'no_telp'   => 'numeric',
-            'password'  =>  'alpha_num|min:6'
+            'nama'      => 'required',
+            'email'     => 'required|email',
+            'jk'        => 'required',
+            'no_telp'   => 'required|min:10|max:15',
+            'password'  => 'required|alpha_num|min:6',
+            'alamat'    => 'required'
         ]);
 
         $user = User::create([
@@ -55,6 +57,13 @@ class PetugasController extends Controller
 
     public function update(Request $request, $id)
     {
+        $this->validate($request, [
+            'nama'      => 'required',
+            'jk'        => 'required',
+            'no_telp'   => 'required|min:10|max:15',
+            'alamat'    => 'required'
+        ]);
+
         $data = Petugas::find($id);
         $data->nama     = ucwords($request->nama);
         $data->jk       = $request->jk;
@@ -63,7 +72,7 @@ class PetugasController extends Controller
         $data->save();
 
         $user = User::find($data->user_id);
-        $user->nama =   ucwords($request->nama);
+        $user->nama     =   ucwords($request->nama);
         $user->save();
 
         return redirect()->route('petugas.index')->with('success', 'Data petugas telah berhasil diupdate!');

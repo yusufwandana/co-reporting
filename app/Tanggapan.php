@@ -8,8 +8,13 @@ class Tanggapan extends Model
 {
     protected $table = 'tanggapan';
     protected $fillable = [
-        'tanggal', 'teks_respon', 'pengaduan_id', 'user_id'
+        'teks_respon', 'pengaduan_id', 'user_id'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
 
     public function pengaduan()
     {

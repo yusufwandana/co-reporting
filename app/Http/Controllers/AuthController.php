@@ -31,7 +31,17 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        // dd($request->all());
+        $this->validate($request, [
+            'email'     =>  'required|email',
+            'password'  =>  'required'
+        ]);
+
+        $data = User::whereEmail($request->email)->first();
+
+        if (!$data) {
+            return redirect()->back()->with('failed', 'Email tersebut belum terdaftar.');
+        }
+
         if (Auth::attempt($request->only('email', 'password'))) {
             if (auth()->user()->role == 'admin') {
                 return redirect()->route('dashboard.admin')->with('success', 'Selamat datang!');
@@ -50,30 +60,32 @@ class AuthController extends Controller
     public function postreg(Request $request)
     {
         $this->validate($request, [
+            'nik'       => 'required|numeric|digits:16',
             'nama'      => 'required',
             'email'     => 'required|email',
-            'password1' => 'alpha_num|min:6',
-            'no_telp'   => 'numeric|max:15',
-            'nik'       => 'numeric|digits:16'
+            'jk'        => 'required',
+            'password'  => 'required|alpha_num|min:6',
+            'no_telp'   => 'required|min:10|max:15',
+            'alamat'    => 'required|min:8'
         ]);
 
         $user = User::create([
             'nama'      => $request->nama,
             'email'     => $request->email,
-            'password'  => bcrypt($request->password1),
+            'password'  => bcrypt($request->password),
             'role'      => 'masyarakat'
         ]);
 
         Masyarakat::create([
             'nik'       =>  $request->nik,
             'nama'      =>  $request->nama,
-            'jk'        =>  $request->jk,
-            'no_telp'   =>  $request->telp,
+            'jk'        =>  $request->jenis_kelamin,
+            'no_telp'   =>  $request->no_telp,
             'alamat'    =>  $request->alamat,
             'user_id'   =>  $user->id
         ]);
 
-        return redirect()->route('login');
+        return redirect()->route('login')->with('success', 'Akun telah berhasil dibuat.');
     }
 
     public function logout()

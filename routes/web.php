@@ -17,41 +17,53 @@ Route::get('/', function () {
     return redirect('login');
 });
 
+// Authentication
 Route::get('login', 'AuthController@index')->name('login');
-Route::get('register', 'AuthController@register')->name('register');
+Route::get('buat-akun', 'AuthController@register')->name('register');
 Route::post('login/post', 'AuthController@login')->name('postlog');
 Route::post('register/post', 'AuthController@postreg')->name('postreg');
 Route::get('logout', 'AuthController@logout')->name('logout');
 
 Route::group(['middleware' => ['auth', 'cekRole:admin']], function(){
-    Route::get('data-petugas', 'PetugasController@index')->name('petugas.index');
-    Route::get('data-petugas/tambah', 'PetugasController@create')->name('petugas.create');
-    Route::post('data-petugas/tambah/post', 'PetugasController@addPetugas')->name('petugas.add');
-    Route::get('data-petugas/edit/{id}', 'PetugasController@edit')->name('petugas.edit');
-    Route::post('data-petugas/update/{id}', 'PetugasController@update')->name('petugas.update');
-    Route::get('data-petugas/hapus/{id}', 'PetugasController@hapus')->name('petugas.hapus');
-    Route::get('data-masyarakat', 'MasyarakatController@index')->name('masyarakat.index');
-    Route::get('data-masyarakat/hapus/{id}', 'MasyarakatController@hapus')->name('masyarakat.hapus');
-    Route::get('print-laporan', 'AdminController@printLaporan')->name('print');
-    Route::post('laporan/print', 'AdminController@printLaporanPost')->name('print.laporan');
+    // Petugas
+    Route::get('petugas/tambah', 'PetugasController@create')->name('petugas.create');
+    Route::post('petugas/tambah/post', 'PetugasController@addPetugas')->name('petugas.add');
+    Route::get('petugas/edit/{id}', 'PetugasController@edit')->name('petugas.edit');
+    Route::post('petugas/update/{id}', 'PetugasController@update')->name('petugas.update');
+    Route::delete('petugas/hapus/{id}', 'PetugasController@hapus')->name('petugas.hapus');
+    // User
+    Route::get('akun', 'UserController@index')->name('user.index');
+    Route::get('akun/edit/{id}', 'UserController@edit')->name('user.edit');
+    Route::delete('akun/delete/{id}', 'UserController@delete')->name('user.delete');
 });
 
 Route::group(['middleware' => ['auth', 'cekRole:admin,petugas']], function(){
-    Route::get('admin/dashboard', 'DashboardController@admin')->name('dashboard.admin');
-    Route::get('pengaduan-proses', 'AdminController@pengaduanProses')->name('pengaduan.proses');
-    Route::get('pengaduan-respon', 'AdminController@tanggapiPengaduan')->name('pengaduan.tanggapi');
-    Route::get('pengaduan-selesai/{id}', 'AdminController@selesaiPengaduan')->name('pengaduan.selesai');
-    Route::get('pengaduan-hapus/{id}', 'AdminController@hapusPengaduan')->name('pengaduan.hapus');
-    Route::get('pengaduan/beri-tanggapan/{id}', 'AdminController@beriTanggapan')->name('beri.tanggapan');
-    Route::get('pengaduan/detail-pengaduan/{id}', 'AdminController@detailPengaduan')->name('detail.pengaduan');
-    Route::post('pengaduan/tanggapan/post', 'AdminController@postTanggapan')->name('post.tanggapan');
+    // Dashboard
+    Route::get('dashboard', 'DashboardController@admin')->name('dashboard.admin');
+    // Data Petugas
+    Route::get('petugas', 'PetugasController@index')->name('petugas.index');
+    // Masyarakat
+    Route::get('masyarakat', 'MasyarakatController@index')->name('masyarakat.index');
+    Route::delete('masyarakat/hapus/{id}', 'MasyarakatController@hapus')->name('masyarakat.hapus');
+    // Route::get('pengaduan/histori', 'PengaduanController@histori')->name('pengaduan.histori');
+    Route::get('pengaduan/cari', 'PengaduanController@cari')->name('pengaduan.cari');
+    // Route::get('pengaduan/cari-histori', 'PengaduanController@cariHistori')->name('pengaduan.cari-histori');
+    Route::delete('pengaduan/hapus/{id}', 'PengaduanController@hapusPengaduan')->name('pengaduan.hapus');
+    Route::get('pengaduan/beri-tanggapan/{id}', 'PengaduanController@beriTanggapan')->name('pengaduan.beri_tanggapan');
+    Route::post('pengaduan/tanggapan/post', 'PengaduanController@postTanggapan')->name('pengaduan.post_tanggapan');
+    Route::get('pengaduan/hapus-tanggapan/{id}', 'PengaduanController@hapusTanggapan')->name('pengaduan.hapus_tanggapan');
+    // Laporan
+    Route::get('laporan', 'PengaduanChartController@index')->name('pengaduan.laporan');
 });
 
-Route::group(['middleware' => ['auth', 'cekRole:admin,masyarakat']], function(){
+Route::group(['middleware' => ['auth', 'cekRole:admin,petugas,masyarakat']], function(){
     Route::get('dashboard/masyarakat', 'DashboardController@masyarakat')->name('dashboard.masyarakat');
-    Route::get('masyarakat/detail-pengaduan/{id}', 'MasyarakatController@detailPengaduan')->name('masyarakat.detail');
+    // Pengaduan
+    Route::get('pengaduan', 'PengaduanController@index')->name('pengaduan.index');
     Route::get('ajukan-pengaduan', 'MasyarakatController@ajukanPengaduan')->name('pengaduan.ajukan');
-    Route::get('riwayat-pengaduan', 'MasyarakatController@riwayatPengaduan')->name('pengaduan.riwayat');
     Route::post('riwayat-pengaduan', 'MasyarakatController@postPengaduan')->name('pengaduan.post');
+    Route::get('batalkan-pengaduan/{id}', 'MasyarakatController@batalkanPengaduan')->name('pengaduan.batalkan');
+    Route::get('riwayat-pengaduan', 'MasyarakatController@riwayatPengaduan')->name('pengaduan.riwayat');
 });
+
 

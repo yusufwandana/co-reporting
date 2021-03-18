@@ -8,7 +8,7 @@ class Pengaduan extends Model
 {
     protected $table = 'pengaduan';
     protected $fillable = [
-        'tanggal', 'masyarakat_id', 'teks_pengaduan', 'foto', 'status', 'user_id'
+        'judul','masyarakat_id', 'teks_pengaduan', 'foto', 'status', 'user_id'
     ];
 
     public function user()
@@ -18,7 +18,7 @@ class Pengaduan extends Model
 
     public function tanggapan()
     {
-        return $this->hasOne('App\Tanggapan');
+        return $this->hasMany('App\Tanggapan');
     }
 
     public function masyarakat()

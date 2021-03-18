@@ -35,11 +35,11 @@ return [
     'date_equals' => 'The :attribute must be a date equal to :date.',
     'date_format' => 'The :attribute does not match the format :format.',
     'different' => 'The :attribute and :other must be different.',
-    'digits' => 'The :attribute must be :digits digits.',
+    'digits' => 'Kolom :attribute harus :digits digit.',
     'digits_between' => 'The :attribute must be between :min and :max digits.',
     'dimensions' => 'The :attribute has invalid image dimensions.',
     'distinct' => 'The :attribute field has a duplicate value.',
-    'email' => 'The :attribute must be a valid email address.',
+    'email' => 'Kolom :attribute harus berupa email yang valid.',
     'ends_with' => 'The :attribute must end with one of the following: :values.',
     'exists' => 'The selected :attribute is invalid.',
     'file' => 'The :attribute must be a file.',
@@ -87,16 +87,16 @@ return [
     'min' => [
         'numeric' => 'The :attribute must be at least :min.',
         'file' => 'The :attribute must be at least :min kilobytes.',
-        'string' => 'The :attribute must be at least :min characters.',
+        'string' => 'Kolom :attribute harus minimal :min karakter.',
         'array' => 'The :attribute must have at least :min items.',
     ],
     'not_in' => 'The selected :attribute is invalid.',
     'not_regex' => 'The :attribute format is invalid.',
-    'numeric' => 'The :attribute must be a number.',
+    'numeric' => 'Kolom :attribute harus diisi nomor.',
     'password' => 'The password is incorrect.',
     'present' => 'The :attribute field must be present.',
     'regex' => 'The :attribute format is invalid.',
-    'required' => 'The :attribute field is required.',
+    'required' => 'Kolom :attribute tidak boleh kosong.',
     'required_if' => 'The :attribute field is required when :other is :value.',
     'required_unless' => 'The :attribute field is required unless :other is in :values.',
     'required_with' => 'The :attribute field is required when :values is present.',
@@ -132,6 +132,17 @@ return [
     'custom' => [
         'attribute-name' => [
             'rule-name' => 'custom-message',
+        ],
+        'jk' => [
+            'required' => 'Kolom jenis kelamin tidak boleh kosong.',
+        ],
+        'teks_respon'   =>  [
+            'required'  => 'Kolom tanggapan tidak boleh kosong.'
+        ],
+        'no_telp' => [
+            'required' => 'Kolom nomor telepon tidak boleh kosong.',
+            'min'      => 'Kolom nomor telepon minimal harus :min karakter.',
+            'max'      => 'Kolom nomor telepon tidak boleh melebihi :max karakter.'
         ],
     ],
 

@@ -5,9 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Masyarakat;
 use App\Pengaduan;
+use Auth;
 
 class MasyarakatController extends Controller
 {
+    public function __construct()
+    {
+        date_default_timezone_set('Asia/Jakarta');
+    }
+
     public function index()
     {
         $data = Masyarakat::all();
@@ -17,15 +23,9 @@ class MasyarakatController extends Controller
     public function ajukanPengaduan()
     {
         $data = Masyarakat::where('user_id', auth()->user()->id)->first();
-        return view('masyarakat.pengaduan', compact('data'));
+        return view('masyarakat.ajukan_pengaduan', compact('data'));
     }
 
-    public function riwayatPengaduan()
-    {
-        $user = Masyarakat::where('user_id', auth()->user()->id)->first();
-        $data = Pengaduan::where('masyarakat_id', $user->id)->latest()->get();
-        return view('masyarakat.riwayat-pengaduan', compact('data'));
-    }
 
     public function detailPengaduan($id)
     {
@@ -36,29 +36,35 @@ class MasyarakatController extends Controller
     public function  postPengaduan(Request $request)
     {
         $this->validate($request, [
-            'file' => 'required|file|mimes:.jpeg,jpg,png|max:2048'
+            'judul'             =>  'required',
+            'teks_pengaduan'    =>  'required',
+            'file'              =>  'file|mimes:.jpeg,jpg,png|max:2048'
         ]);
 
-        $time = date('ymdhis');
-        $id   = uniqid();
-        $file = $request->file;
-        $fileName  = $time . $id . '.' . $file->getClientOriginalExtension();
-        $moveto = 'public/images/pengaduan';
-        $file->move($moveto, $fileName);
-        $date = date('Y-m-d');
+        $user = Auth::user();
+        $masyarakat = Masyarakat::where('user_id', $user->id)->first();
 
-        $masyarakat = Masyarakat::where('user_id', auth()->user()->id)->first();
+        if ($request->file) {
+            $time = time();
+            $id   = uniqid();
+            $file = $request->file;
+            $fileName  = $time . $id . '.' . $file->getClientOriginalExtension();
+            $moveto = 'images/pengaduan';
+            $file->move($moveto, $fileName);
+        }else{
+            $fileName = '';
+        }
 
         Pengaduan::create([
-            'tanggal' => $date,
-            'masyarakat_id' => $masyarakat->id,
-            'teks_pengaduan' => htmlspecialchars($request->teks_masalah),
-            'foto' => $fileName,
-            'status' => 'terkirim',
-            'user_id' => auth()->user()->id
+            'judul'             => htmlspecialchars($request->judul),
+            'masyarakat_id'     => $masyarakat->id,
+            'teks_pengaduan'    => htmlspecialchars($request->teks_pengaduan),
+            'foto'              => $fileName,
+            'status'            => 'terkirim',
+            'user_id'           => $user->id
         ]);
 
-        return redirect()->route('dashboard.' . auth()->user()->role)->with('success', 'Sukses! Terima kasih telah melaporkan masalah Anda!');
+        return redirect()->route('pengaduan.index')->with('success', 'Pengaduan telah dikirimkan. Tunggu respon dari petugas dalam 1x24 jam. Terima kasih.');
     }
 
     public function hapus($id)
@@ -66,5 +72,15 @@ class MasyarakatController extends Controller
         $masyarakat = Masyarakat::find($id)->delete();
 
         return redirect()->route('masyarakat.index')->with('success', 'Data telah berhasi dihapus!');
+    }
+
+    public function batalkanPengaduan($id)
+    {
+        $data = Pengaduan::find($id);
+        $data->update([
+            'status'    =>  'dibatalkan'
+        ]);
+
+        return redirect()->back()->with('success', 'Pengaduan No.'.$data->id.' telah Anda batalkan.');
     }
 }
